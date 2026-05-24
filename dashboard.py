@@ -17,9 +17,9 @@ if 'table_data' not in st.session_state:
 st.markdown("""
 <style>
 .stApp { background-color: #e8f5e9; }
-.header-container { display: flex; align-items: center; background: bleu; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.header-container { display: flex; align-items: center; background: blue; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .table-header { display: grid; grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1.5fr 0.8fr; background: #343a40; color: white; text-align: center; padding: 15px; border-radius: 10px 10px 0 0; font-weight: bold; font-size: 13px; }
-.data-row { display: grid; grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1.5fr 0.8fr; background: bleu; color: black; text-align: center; padding: 12px; border-bottom: 1px solid #eee; align-items: center; font-size: 13px; }
+.data-row { display: grid; grid-template-columns: 0.5fr 1.5fr 1.5fr 1fr 1fr 1fr 1.5fr 0.8fr; background: white; color: black; text-align: center; padding: 12px; border-bottom: 1px solid #eee; align-items: center; font-size: 13px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -92,13 +92,13 @@ if update_btn and uploaded_file:
     df = pd.read_csv(uploaded_file)
     real_end = len(df) if end_num_val.lower() == "last" else int(end_num_val)
     
-    # Linux setup bina crash options ke
+    # Headless mode configuration for Cloud Linux Server
     options = Options()
-    options.add_argument("--headless")  # Cloud par baghair window ke chalanay ke liye lazmi hai
+    options.add_argument("--headless")  
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     
-    # Streamlit Linux Server Driver setup
+    # Standard Streamlit Cloud driver path
     service = Service("/usr/bin/chromedriver")
     driver = webdriver.Chrome(service=service, options=options)
 
