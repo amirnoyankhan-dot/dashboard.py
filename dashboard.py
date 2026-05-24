@@ -92,15 +92,27 @@ if update_btn and uploaded_file:
     df = pd.read_csv(uploaded_file)
     real_end = len(df) if end_num_val.lower() == "last" else int(end_num_val)
     
-    # Headless mode configuration for Cloud Linux Server
+    # Headless aur Cloud Server Stability Options
     options = Options()
-    options.add_argument("--headless")  
+    options.add_argument("--headless=new")  # Naya aur zyada stable headless mode
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
     
-    # Standard Streamlit Cloud driver path
-    service = Service("/usr/bin/chromedriver")
-    driver = webdriver.Chrome(service=service, options=options)
+    # Streamlit Cloud (Linux) ke liye browser binary set karein
+    options.binary_location = "/usr/bin/chromium"
+    
+    try:
+        # Pehle standard automatic detection try karein
+        driver = webdriver.Chrome(options=options)
+    except Exception as e:
+        try:
+            # Agar upar wala fail ho, to fixed path service try karein
+            service = Service("/usr/bin/chromedriver")
+            driver = webdriver.Chrome(service=service, options=options)
+        except Exception as alternate_error:
+            st.error(f"Driver Configuration Error: {alternate_error}")
+            st.stop()
 
     try:
         for i in range(start_num-1, real_end):
