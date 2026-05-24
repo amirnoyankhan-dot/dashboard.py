@@ -4,7 +4,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 import re
 
@@ -35,7 +34,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- 1. Scraper Settings (WAPAS ADD KIYA) ---
+# --- 1. Scraper Settings ---
 with st.container():
     st.write("⚙️ **Scraper Settings:**")
     s_col = st.columns(6)
@@ -93,16 +92,18 @@ if update_btn and uploaded_file:
     df = pd.read_csv(uploaded_file)
     real_end = len(df) if end_num_val.lower() == "last" else int(end_num_val)
     
+    # Linux setup bina crash options ke
     options = Options()
+    options.add_argument("--headless")  # Cloud par baghair window ke chalanay ke liye lazmi hai
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     
-   driver = webdriver.Chrome(options=options)
-
+    # Streamlit Linux Server Driver setup
+    service = Service("/usr/bin/chromedriver")
+    driver = webdriver.Chrome(service=service, options=options)
 
     try:
         for i in range(start_num-1, real_end):
-            # Window check to prevent NoSuchWindowException
             try:
                 _ = driver.window_handles
             except:
@@ -116,7 +117,7 @@ if update_btn and uploaded_file:
             if "http" in link:
                 try:
                     driver.get(link)
-                    time.sleep(p_wait) # Settings ka wait use ho raha hai
+                    time.sleep(p_wait)
                     
                     p_text = driver.find_element(By.CSS_SELECTOR, "span.a-price span.a-offscreen").get_attribute("textContent")
                     live_p = re.sub(r'[^\d.]', '', p_text)
