@@ -97,7 +97,8 @@ if update_btn and uploaded_file:
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+   driver = webdriver.Chrome(options=options)
+
 
     try:
         for i in range(start_num-1, real_end):
