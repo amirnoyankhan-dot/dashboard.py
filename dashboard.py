@@ -92,18 +92,31 @@ if update_btn and uploaded_file:
     df = pd.read_csv(uploaded_file)
     real_end = len(df) if end_num_val.lower() == "last" else int(end_num_val)
     
-    # Headless aur Cloud Server Stability Options
+    # Headless aur Cloud Server Stability Settings
     options = Options()
-    options.add_argument("--headless=new")  # Naya aur zyada stable headless mode
+    options.add_argument("--headless=new")  # Naya secure aur stable headless mode
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     
-    # Streamlit Cloud (Linux) ke liye browser binary set karein
+    # Streamlit Cloud Linux environment ke liye browser binary path
     options.binary_location = "/usr/bin/chromium"
     
+    # Bina kisi manager ya fixed path service ke automatic system driver invoke karein
     try:
-        # Pehle standard automatic detection try karein
+        driver = webdriver.Chrome(options=options)
+    except Exception as e:
+        # Alternate safe path fallback agar automatic check miss ho jaye
+        try:
+            from selenium.webdriver.chrome.service import Service
+            service = Service("/usr/bin/chromedriver")
+            driver = webdriver.Chrome(service=service, options=options)
+        except Exception as alternate_error:
+            st.error(f"Driver Configuration Error: {alternate_error}")
+            st.stop()
+
+    try:
+
         driver = webdriver.Chrome(options=options)
     except Exception as e:
         try:
